@@ -9,6 +9,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+import cors from "cors";
+
+// Allow only your frontend domain (replace with your actual domain)
+const allowedOrigins = ["https://ssd-web-beta.vercel.app"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET"],
+    credentials: false,
+  })
+);
+
 app.get("/proxy-sse", async (req: Request, res: Response) => {
   const { input_message, token } = req.query;
 
@@ -35,6 +48,11 @@ app.get("/proxy-sse", async (req: Request, res: Response) => {
     res.setHeader("Connection", "keep-alive");
 
     // Convert Web Stream to Node stream and pipe to response
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://ssd-web-beta.vercel.app"
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true"); // optional
     Readable.fromWeb(upstreamResponse.body as any).pipe(res);
   } catch (error) {
     console.error("Proxy error:", error);

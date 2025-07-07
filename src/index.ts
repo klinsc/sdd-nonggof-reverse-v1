@@ -42,6 +42,11 @@ app.get("/proxy-sse", async (req: Request, res: Response) => {
   }
 });
 
+// Welcome route
+app.get("/", (req: Request, res: Response) => {
+  res.send("Welcome to the SSE Proxy Server!");
+});
+
 app.listen(PORT, () => {
   console.log(`SSE proxy server running on http://localhost:${PORT}`);
 });
